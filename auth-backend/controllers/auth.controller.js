@@ -3,12 +3,12 @@ import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
     auth: {
-        user: 'zaidaziz139@gmail.com',
-        pass: 'pbsi uzyg vhrk jlnh'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
     }
 })
 
