@@ -16,7 +16,7 @@ export default function Register() {
     setError('')
     try {
       await axios.post('https://nexora-ai-research-platform-production.up.railway.app/api/auth/register', form)
-      navigate('/verify-otp', { state: { email: form.email } })
+      navigate('/search', { state: { email: form.email } })
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong')
     } finally {
