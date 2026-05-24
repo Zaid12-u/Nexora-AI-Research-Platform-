@@ -23,7 +23,7 @@ export default function HistoryPage() {
   const fetchHistory = async () => {
     try {
       const res = await axios.get(
-        'http://localhost:3000/api/history/get',
+        'https://nexora-ai-research-platform-production.up.railway.app/api/history/get',
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -41,7 +41,7 @@ export default function HistoryPage() {
   const deleteHistory = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:3000/api/history/delete/${id}`,
+        `https://nexora-ai-research-platform-production.up.railway.app/api/history/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`

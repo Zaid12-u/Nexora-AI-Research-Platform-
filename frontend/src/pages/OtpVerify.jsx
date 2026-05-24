@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { BookOpen, ShieldCheck, ArrowRight } from 'lucide-react'
 import axios from 'axios'
 
+const AUTH_URL = 'https://nexora-ai-research-platform-production.up.railway.app'
+
 export default function OtpVerify() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -16,7 +18,12 @@ export default function OtpVerify() {
     setLoading(true)
     setError('')
     try {
-      await axios.post('http://localhost:3000/api/auth/verify-otp', { email, otp })
+      const res = await axios.post(`${AUTH_URL}/api/auth/verify-otp`, { email, otp })
+
+      // Token + user save karo ✅
+      localStorage.setItem('token', res.data.token)
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+
       navigate('/search')
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid OTP')

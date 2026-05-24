@@ -4,6 +4,9 @@ import Sidebar from '../components/Sidebar'
 import TopBar from '../components/TopBar'
 import axios from 'axios'
 
+const AI_URL = 'https://zaiddev123-nexora-ai-service.hf.space'
+const AUTH_URL = 'https://nexora-ai-research-platform-production.up.railway.app'
+
 export default function SearchPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [query, setQuery] = useState(localStorage.getItem('lastQuery') || '')
@@ -30,23 +33,23 @@ export default function SearchPage() {
     setActiveQA(null)
     try {
       if (deepMode) {
-        const res = await axios.post('http://localhost:8000/deep-search', { query })
+        const res = await axios.post(`${AI_URL}/deep-search`, { query })
         setDeepResult(res.data)
         setResults(res.data.papers)
         localStorage.setItem('lastQuery', query)
         localStorage.setItem('lastResults', JSON.stringify(res.data.papers))
         localStorage.setItem('lastDeepResult', JSON.stringify(res.data))
-        await axios.post('http://localhost:3000/api/history/save',
+        await axios.post(`${AUTH_URL}/api/history/save`,
           { query: `[Deep Search] ${query}`, results: res.data.papers },
           { headers: { Authorization: `Bearer ${token}` } }
         )
       } else {
-        const res = await axios.post('http://localhost:8000/search', { query, max_results: 10 })
+        const res = await axios.post(`${AI_URL}/search`, { query, max_results: 10 })
         setResults(res.data.results)
         localStorage.setItem('lastQuery', query)
         localStorage.setItem('lastResults', JSON.stringify(res.data.results))
         localStorage.removeItem('lastDeepResult')
-        await axios.post('http://localhost:3000/api/history/save',
+        await axios.post(`${AUTH_URL}/api/history/save`,
           { query, results: res.data.results },
           { headers: { Authorization: `Bearer ${token}` } }
         )
@@ -63,7 +66,7 @@ export default function SearchPage() {
     setQaLoading(true)
     setQaAnswer('')
     try {
-      const res = await axios.post('http://localhost:8000/qa', {
+      const res = await axios.post(`${AI_URL}/qa`, {
         question,
         paper_title: paper.title,
         paper_abstract: paper.abstract

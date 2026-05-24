@@ -3,12 +3,8 @@ import faiss
 import numpy as np
 from openalex_fetch import fetch_from_openalex
 from database import get_papers_collection
-import os
 
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
-os.environ["HF_DATASETS_OFFLINE"] = "1"
-
-model = SentenceTransformer('all-MiniLM-L6-v2', local_files_only=True)
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def get_embedding(text: str):
     return model.encode([text])[0].tolist()
@@ -16,14 +12,11 @@ def get_embedding(text: str):
 def search_papers(query: str, max_results: int = 10):
     collection = get_papers_collection()
     
-    
     query_embedding = np.array(model.encode([query]))
-
 
     all_papers = list(collection.find({}, {"_id": 0}))
 
     if len(all_papers) > 0:
-        # Papers ke embeddings nikalo
         embeddings = []
         valid_papers = []
 
@@ -33,7 +26,6 @@ def search_papers(query: str, max_results: int = 10):
                 valid_papers.append(paper)
 
         if embeddings:
-            
             paper_embeddings = np.array(embeddings).astype('float32')
             query_emb = query_embedding.astype('float32')
 
@@ -44,7 +36,6 @@ def search_papers(query: str, max_results: int = 10):
             k = min(max_results, len(valid_papers))
             distances, indices = index.search(query_emb, k)
 
-            
             threshold = 1.5
             similar_papers = []
             for i, dist in zip(indices[0], distances[0]):
@@ -55,21 +46,18 @@ def search_papers(query: str, max_results: int = 10):
                 print(f"MongoDB se {len(similar_papers)} papers mile!")
                 return similar_papers
 
-    
     print(f"OpenAlex se fetch ho raha hai: {query}")
     papers = fetch_from_openalex(query, max_results=10)
 
     if not papers:
         return []
 
-    
     for paper in papers:
         text = f"{paper['title']} {paper['abstract']}"
         embedding = get_embedding(text)
         paper['embedding'] = embedding
         paper['topic'] = query.lower().strip()
 
-        
         try:
             collection.update_one(
                 {"title": paper["title"]},
