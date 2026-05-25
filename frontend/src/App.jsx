@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
 import Welcome from './pages/Welcome'
 import Register from './pages/Register'
-import OtpVerify from './pages/OtpVerify'
+
 import Login from './pages/Login'
 import Search from './pages/Search'
 import History from './pages/History'
