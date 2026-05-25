@@ -17,6 +17,8 @@ export default function Sidebar({ isOpen, onClose }) {
     localStorage.removeItem('lastQuery')
     localStorage.removeItem('lastResults')
     localStorage.removeItem('lastDeepResult')
+    localStorage.removeItem('lastGapQuery')
+    localStorage.removeItem('lastGapResult')
     navigate('/login')
     onClose()
   }
