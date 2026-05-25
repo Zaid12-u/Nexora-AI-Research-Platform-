@@ -12,3 +12,13 @@ connectDB()
 app.listen(process.env.PORT, () => {
     console.log('Server running at port 3000')
 })
+
+
+setInterval(async () => {
+    try {
+        const res = await fetch('https://zaiddev123-nexora-ai-service.hf.space/')
+        console.log('HuggingFace pinged! Status:', res.status)
+    } catch (err) {
+        console.log('Ping failed:', err.message)
+    }
+}, 10 * 60 * 1000)
