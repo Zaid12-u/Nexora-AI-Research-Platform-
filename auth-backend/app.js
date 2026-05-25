@@ -7,7 +7,11 @@ import cookieParser from 'cookie-parser'
 const app = express()
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://nexora-ai-research-platform.vercel.app"
+    ],
     credentials: true
 }))
 app.use(cookieParser())
